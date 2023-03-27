@@ -34,7 +34,15 @@ public  class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(String email) throws Exception {
-        return null;
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        UserDto userDto = new UserDto();
+        userDto.setLastName(userEntity.getLastName());
+        userDto.setEmail(userEntity.getEmail());
+        userDto.setFirstName(userEntity.getFirstName());
+        userDto.setUserId(userEntity.getUserId());
+
+        return userDto;
     }
 
     @Override

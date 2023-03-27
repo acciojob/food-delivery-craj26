@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.driver.io.entity.UserEntity;
+import com.driver.io.repository.UserRepository;
 import com.driver.model.request.UserDetailsRequestModel;
 import com.driver.model.response.OperationStatusModel;
 import com.driver.model.response.UserResponse;
@@ -24,11 +26,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserRepository userRepository;
+
 
 	@GetMapping(path = "/{id}")
 	public UserResponse getUser(@PathVariable String id) throws Exception{
 
-		return null;
+		UserEntity userEntity = userRepository.findById(Long.parseLong(id)).get();
+		String email = userEntity.getEmail();
+
+		UserDto userDto = userService.getUser(email);
+
+		UserResponse userResponse = new UserResponse();
+		userResponse.setLastName(userDto.getLastName());
+		userResponse.setEmail(userDto.getEmail());
+		userResponse.setFirstName(userDto.getFirstName());
+		userResponse.setUserId(userDto.getUserId());
+
+		return userResponse;
 	}
 
 	@PostMapping()
