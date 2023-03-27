@@ -74,10 +74,14 @@ public class UserController {
 	@PutMapping(path = "/{id}")
 	public UserResponse updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) throws Exception{
 
+		UserEntity userEntity=userRepository.findById(Long.parseLong(id)).get();
+		String userId=userEntity.getUserId();
+
 		UserDto userDto = new UserDto();
 		userDto.setEmail(userDetails.getEmail());
 		userDto.setLastName(userDetails.getLastName());
 		userDto.setFirstName(userDetails.getFirstName());
+		userDto.setUserId(userId);
 
 		UserDto userDto1 = userService.updateUser(id,userDto);
 

@@ -55,6 +55,8 @@ public class OrderController {
 		orderDto.setUserId(order.getUserId());
 		orderDto.setStatus(true);
 		orderDto.setItems(order.getItems());
+		orderDto.setOrderId(UUID.randomUUID().toString());
+
 
 		OrderDto orderDto1 = orderService.createOrder(orderDto);
 
@@ -71,13 +73,17 @@ public class OrderController {
 	@PutMapping(path="/{id}")
 	public OrderDetailsResponse updateOrder(@PathVariable String id, @RequestBody OrderDetailsRequestModel order) throws Exception{
 
+		OrderEntity orderEntity=orderRepository.findById(Long.parseLong(id)).get();
+		String orderId=orderEntity.getOrderId();
+
 		OrderDto orderDto = new OrderDto();
 		orderDto.setUserId(order.getUserId());
 		orderDto.setCost(order.getCost());
 		orderDto.setItems(order.getItems());
-		orderDto.setOrderId(UUID.randomUUID().toString());
+		orderDto.setOrderId(orderId);
 
-		OrderDto orderDto1 = orderService.updateOrderDetails(id,orderDto);
+
+		OrderDto orderDto1 = orderService.updateOrderDetails(orderId,orderDto);
 
 		OrderDetailsResponse orderDetailsResponse = new OrderDetailsResponse();
 		orderDetailsResponse.setOrderId(orderDto1.getOrderId());
