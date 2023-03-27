@@ -44,6 +44,9 @@ public class FoodServiceImpl implements FoodService {
         foodEntity.setFoodName(foodDetails.getFoodName());
         foodEntity.setFoodPrice(foodDetails.getFoodPrice());
         foodEntity.setFoodCategory(foodDetails.getFoodCategory());
+        foodEntity.setFoodId(foodDetails.getFoodId());
+
+        foodRepository.save(foodEntity);
 
 
         return foodDetails;

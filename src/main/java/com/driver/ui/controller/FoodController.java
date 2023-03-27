@@ -71,20 +71,22 @@ public class FoodController {
 
 	@PutMapping(path="/{id}")
 	public FoodDetailsResponse updateFood(@PathVariable String id, @RequestBody FoodDetailsRequestModel foodDetails) throws Exception{
-		FoodDto foodDto=new FoodDto();
+		FoodEntity foodEntity = foodRepository.findById(Long.parseLong(id)).get();
+		String foodId = foodEntity.getFoodId();
+
+		FoodDto foodDto = new FoodDto();
+		foodDto.setFoodCategory(foodDetails.getFoodCategory());
 		foodDto.setFoodName(foodDetails.getFoodName());
 		foodDto.setFoodPrice(foodDetails.getFoodPrice());
-		foodDto.setFoodPrice(foodDto.getFoodPrice());
+		foodDto.setFoodId(foodId);
 
-		FoodDto foodDto1=foodService.updateFoodDetails(id,foodDto);
+		FoodDto foodDto1 = foodService.updateFoodDetails(foodId,foodDto);
 
-
-		//respnse
-		FoodDetailsResponse foodDetailsResponse=new FoodDetailsResponse();
-		foodDetailsResponse.setFoodId(foodDto1.getFoodId());
+		FoodDetailsResponse foodDetailsResponse = new FoodDetailsResponse();
+		foodDetailsResponse.setFoodId(foodId);
+		foodDetailsResponse.setFoodCategory(foodDto1.getFoodCategory());
 		foodDetailsResponse.setFoodPrice(foodDto1.getFoodPrice());
 		foodDetailsResponse.setFoodName(foodDto1.getFoodName());
-		foodDetailsResponse.setFoodCategory(foodDto1.getFoodCategory());
 
 		return foodDetailsResponse;
 	}
