@@ -7,6 +7,7 @@ import com.driver.service.FoodService;
 import com.driver.shared.dto.FoodDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodServiceImpl implements FoodService {
@@ -27,7 +28,14 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodDto getFoodById(String foodId) throws Exception {
-        return null;
+        FoodEntity foodEntity = foodRepository.findByFoodId(foodId);
+
+        FoodDto foodDto = new FoodDto();
+        foodDto.setFoodPrice(foodEntity.getFoodPrice());
+        foodDto.setFoodName(foodEntity.getFoodName());
+        foodDto.setFoodCategory(foodEntity.getFoodCategory());
+        foodDto.setFoodId(foodEntity.getFoodId());
+        return foodDto;
     }
 
     @Override
@@ -50,6 +58,22 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<FoodDto> getFoods() {
-        return null;
+        List<FoodEntity>foodEntityList = (List<FoodEntity>) foodRepository.findAll();
+
+        List<FoodDto>foodDtoList = new ArrayList<>();
+
+        for(FoodEntity foodEntity:foodEntityList){
+            FoodDto foodDto = new FoodDto();
+            foodDto.setFoodId(foodEntity.getFoodId());
+            foodDto.setFoodName(foodEntity.getFoodName());
+            foodDto.setFoodPrice(foodEntity.getFoodPrice());
+            foodDto.setFoodCategory(foodEntity.getFoodCategory());
+
+            foodDtoList.add(foodDto);
+        }
+
+
+        return foodDtoList;
+
     }
 }

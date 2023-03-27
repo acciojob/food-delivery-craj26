@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.driver.io.entity.FoodEntity;
 import com.driver.io.repository.FoodRepository;
 import com.driver.model.request.FoodDetailsRequestModel;
 import com.driver.model.response.FoodDetailsResponse;
@@ -29,10 +30,21 @@ public class FoodController {
 	@Autowired
 	FoodRepository foodRepository;
 
+
 	@GetMapping(path="/{id}")
 	public FoodDetailsResponse getFood(@PathVariable String id) throws Exception{
+		FoodEntity foodEntity = foodRepository.findById(Long.parseLong(id)).get();
+		String foodId = foodEntity.getFoodId();
 
-		return null;
+		FoodDto foodDto = foodService.getFoodById(foodId);
+
+		FoodDetailsResponse foodDetailsResponse = new FoodDetailsResponse();
+		foodDetailsResponse.setFoodPrice(foodDto.getFoodPrice());
+		foodDetailsResponse.setFoodName(foodDto.getFoodName());
+		foodDetailsResponse.setFoodCategory(foodDto.getFoodCategory());
+		foodDetailsResponse.setFoodId(foodDto.getFoodId());
+
+		return foodDetailsResponse;
 	}
 
 	@PostMapping("/create")
