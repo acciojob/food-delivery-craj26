@@ -24,15 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/foods")
 public class FoodController {
+
 	@Autowired
 	FoodService foodService;
 
 	@Autowired
 	FoodRepository foodRepository;
 
-
 	@GetMapping(path="/{id}")
 	public FoodDetailsResponse getFood(@PathVariable String id) throws Exception{
+
 		FoodEntity foodEntity = foodRepository.findById(Long.parseLong(id)).get();
 		String foodId = foodEntity.getFoodId();
 
@@ -49,28 +50,28 @@ public class FoodController {
 
 	@PostMapping("/create")
 	public FoodDetailsResponse createFood(@RequestBody FoodDetailsRequestModel foodDetails) {
-		FoodDto foodDto=new FoodDto();
-		foodDto.setFoodId(UUID.randomUUID().toString());
+
+		FoodDto foodDto  = new FoodDto();
 		foodDto.setFoodCategory(foodDetails.getFoodCategory());
+		foodDto.setFoodId(UUID.randomUUID().toString());
 		foodDto.setFoodName(foodDetails.getFoodName());
 		foodDto.setFoodPrice(foodDetails.getFoodPrice());
 
-		FoodDto foodDto1=foodService.createFood(foodDto);
-
-		//FOOD RESPONSE BODY
-
-		FoodDetailsResponse foodDetailsResponse=new FoodDetailsResponse();
+		FoodDto foodDto1 = foodService.createFood(foodDto);
+		FoodDetailsResponse foodDetailsResponse = new FoodDetailsResponse();
 		foodDetailsResponse.setFoodCategory(foodDto1.getFoodCategory());
 		foodDetailsResponse.setFoodName(foodDto1.getFoodName());
 		foodDetailsResponse.setFoodPrice(foodDto1.getFoodPrice());
 		foodDetailsResponse.setFoodId(foodDto1.getFoodId());
 
-		return foodDetailsResponse;
 
+
+		return foodDetailsResponse;
 	}
 
 	@PutMapping(path="/{id}")
 	public FoodDetailsResponse updateFood(@PathVariable String id, @RequestBody FoodDetailsRequestModel foodDetails) throws Exception{
+
 		FoodEntity foodEntity = foodRepository.findById(Long.parseLong(id)).get();
 		String foodId = foodEntity.getFoodId();
 
@@ -93,6 +94,7 @@ public class FoodController {
 
 	@DeleteMapping(path = "/{id}")
 	public OperationStatusModel deleteFood(@PathVariable String id) throws Exception{
+
 		OperationStatusModel operationStatusModel = new OperationStatusModel();
 
 		try {
@@ -106,7 +108,7 @@ public class FoodController {
 			return operationStatusModel;
 		}
 	}
-	
+
 	@GetMapping()
 	public List<FoodDetailsResponse> getFoods() {
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.driver.io.entity.FoodEntity;
+import com.driver.io.entity.OrderEntity;
+import com.driver.io.repository.OrderRepository;
 import com.driver.model.request.OrderDetailsRequestModel;
 import com.driver.model.response.OperationStatusModel;
 import com.driver.model.response.OrderDetailsResponse;
@@ -22,19 +25,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
+
 	@Autowired
 	OrderService orderService;
+
+	@Autowired
+	OrderRepository orderRepository;
 	@GetMapping(path="/{id}")
 	public OrderDetailsResponse getOrder(@PathVariable String id) throws Exception{
 
-		return null;
+		OrderEntity orderEntity = orderRepository.findById(Long.parseLong(id)).get();
+		String orderId = orderEntity.getOrderId();
+		OrderDto orderDto = orderService.getOrderById(orderId);
+
+		OrderDetailsResponse orderDetailsResponse = new OrderDetailsResponse();
+		orderDetailsResponse.setUserId(orderDto.getUserId());
+		orderDetailsResponse.setItems(orderDto.getItems());
+		orderDetailsResponse.setCost(orderDto.getCost());
+		orderDetailsResponse.setStatus(orderDto.isStatus());
+		orderDetailsResponse.setOrderId(orderDto.getOrderId());
+
+		return orderDetailsResponse;
 	}
-	
+
 	@PostMapping()
 	public OrderDetailsResponse createOrder(@RequestBody OrderDetailsRequestModel order) {
-		OrderDto orderDto=new OrderDto();
-		//orderDto.setOrderId(UUID.randomUUID().toString());
-		orderDto.setCost(order.getCost());
+		OrderDto orderDto = new OrderDto();
 		orderDto.setCost(order.getCost());
 		orderDto.setUserId(order.getUserId());
 		orderDto.setStatus(true);
@@ -50,13 +66,11 @@ public class OrderController {
 		orderDetailsResponse.setUserId(orderDto1.getUserId());
 
 		return orderDetailsResponse;
-
-		
-
 	}
-		
+
 	@PutMapping(path="/{id}")
 	public OrderDetailsResponse updateOrder(@PathVariable String id, @RequestBody OrderDetailsRequestModel order) throws Exception{
+
 		OrderDto orderDto = new OrderDto();
 		orderDto.setUserId(order.getUserId());
 		orderDto.setCost(order.getCost());
@@ -73,9 +87,10 @@ public class OrderController {
 		orderDetailsResponse.setUserId(orderDto1.getUserId());
 		return orderDetailsResponse;
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	public OperationStatusModel deleteOrder(@PathVariable String id) throws Exception {
+
 		OperationStatusModel operationStatusModel = new OperationStatusModel();
 
 		try {
@@ -89,9 +104,10 @@ public class OrderController {
 			return operationStatusModel;
 		}
 	}
-	
+
 	@GetMapping()
 	public List<OrderDetailsResponse> getOrders() {
+
 		List<OrderDto>orderDtoList = orderService.getOrders();
 
 		List<OrderDetailsResponse>orderDetailsResponseList = new ArrayList<>();

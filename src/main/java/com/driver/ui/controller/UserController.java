@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.driver.io.entity.FoodEntity;
 import com.driver.io.entity.UserEntity;
 import com.driver.io.repository.UserRepository;
 import com.driver.model.request.UserDetailsRequestModel;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
 	@Autowired
 	UserService userService;
+
 	@Autowired
 	UserRepository userRepository;
 
@@ -49,15 +52,16 @@ public class UserController {
 
 	@PostMapping()
 	public UserResponse createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception{
-		UserDto userDto=new UserDto();
+
+		UserDto userDto = new UserDto();
 		userDto.setUserId(UUID.randomUUID().toString());
+		//userDto.setId();
 		userDto.setEmail(userDetails.getEmail());
 		userDto.setFirstName(userDetails.getFirstName());
 		userDto.setLastName(userDetails.getLastName());
 
-		UserDto userDto1 = userService.createUser(userDto);
 
-		//USER RESPONSE
+		UserDto userDto1 = userService.createUser(userDto);
 		UserResponse userResponse = new UserResponse();
 		userResponse.setEmail(userDto1.getEmail());
 		userResponse.setUserId(userDto1.getUserId());
@@ -69,21 +73,20 @@ public class UserController {
 
 	@PutMapping(path = "/{id}")
 	public UserResponse updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) throws Exception{
-		UserDto userDto=new UserDto();
+
+		UserDto userDto = new UserDto();
 		userDto.setEmail(userDetails.getEmail());
 		userDto.setLastName(userDetails.getLastName());
 		userDto.setFirstName(userDetails.getFirstName());
 
-		UserDto userDto1=userService.updateUser(id,userDto);
+		UserDto userDto1 = userService.updateUser(id,userDto);
 
-		//response Body
-		UserResponse userResponse=new UserResponse();
+		UserResponse userResponse = new UserResponse();
 		userResponse.setUserId(userDto1.getUserId());
-		userResponse.setFirstName(userDto1.getFirstName());
 		userResponse.setLastName(userDto1.getLastName());
+		userResponse.setFirstName(userDto1.getFirstName());
 		userResponse.setEmail(userDto1.getEmail());
-
-		return  userResponse;
+		return userResponse;
 	}
 
 	@DeleteMapping(path = "/{id}")
@@ -95,12 +98,14 @@ public class UserController {
 		operationStatusModel.setOperationResult("successful");
 		return operationStatusModel;
 	}
-	
+
 	@GetMapping()
 	public List<UserResponse> getUsers(){
-		List<UserDto> userDtoList=userService.getUsers();
 
-		List<UserResponse>userResponseList=new ArrayList<>();
+		List<UserDto>userDtoList = userService.getUsers();
+
+		List<UserResponse>userResponseList = new ArrayList<>();
+
 		for(UserDto userDto:userDtoList){
 			UserResponse userResponse = new UserResponse();
 			userResponse.setEmail(userDto.getEmail());
@@ -112,5 +117,5 @@ public class UserController {
 
 		return userResponseList;
 	}
-	
+
 }

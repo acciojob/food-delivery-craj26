@@ -1,6 +1,5 @@
 package com.driver.service.impl;
 
-
 import com.driver.io.entity.FoodEntity;
 import com.driver.io.repository.FoodRepository;
 import com.driver.service.FoodService;
@@ -11,11 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FoodServiceImpl implements FoodService {
+
     @Autowired
     FoodRepository foodRepository;
+
     @Override
     public FoodDto createFood(FoodDto food) {
-        FoodEntity foodEntity=new FoodEntity();
+
+        FoodEntity foodEntity = new FoodEntity();
         foodEntity.setFoodCategory(food.getFoodCategory());
         foodEntity.setFoodId(food.getFoodId());
         foodEntity.setFoodName(food.getFoodName());
@@ -28,6 +30,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodDto getFoodById(String foodId) throws Exception {
+
         FoodEntity foodEntity = foodRepository.findByFoodId(foodId);
 
         FoodDto foodDto = new FoodDto();
@@ -40,27 +43,31 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodDto updateFoodDetails(String foodId, FoodDto foodDetails) throws Exception {
-        FoodEntity foodEntity= foodRepository.findByFoodId(foodId);
-        foodEntity.setFoodName(foodDetails.getFoodName());
+
+        FoodEntity foodEntity = foodRepository.findByFoodId(foodId);
         foodEntity.setFoodPrice(foodDetails.getFoodPrice());
+        foodEntity.setFoodName(foodDetails.getFoodName());
         foodEntity.setFoodCategory(foodDetails.getFoodCategory());
         foodEntity.setFoodId(foodDetails.getFoodId());
 
         foodRepository.save(foodEntity);
-
 
         return foodDetails;
     }
 
     @Override
     public void deleteFoodItem(String id) throws Exception {
-        FoodEntity foodEntity=foodRepository.findByFoodId(id);
-        foodRepository.deleteById(foodEntity.getId());
+
+        FoodEntity foodEntity = foodRepository.findByFoodId(id);
+        long Id = foodEntity.getId();
+        foodRepository.deleteById(Id);
+
 
     }
 
     @Override
     public List<FoodDto> getFoods() {
+
         List<FoodEntity>foodEntityList = (List<FoodEntity>) foodRepository.findAll();
 
         List<FoodDto>foodDtoList = new ArrayList<>();
@@ -77,6 +84,5 @@ public class FoodServiceImpl implements FoodService {
 
 
         return foodDtoList;
-
     }
 }
